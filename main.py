@@ -14,4 +14,4 @@ def root():
 @app.post("/question")
 async def invokegraph(q: Question):
     context, answer = invoke_graph(q.question)
-    return {"context":context, "answer": answer}
+    return {"context": context, "answer": answer}
