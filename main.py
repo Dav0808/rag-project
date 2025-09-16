@@ -9,7 +9,7 @@ class Question(BaseModel):
 
 @app.get("/")
 def root():
-    return {"Hello": "World"}
+    return {"Hello": "Game Theory enthusiast!"}
 
 @app.post("/question")
 async def invokegraph(q: Question):
