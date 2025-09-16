@@ -1,0 +1,9 @@
+# Ignore Jupyter notebooks
+*.ipynb
+
+# Ignore environment file with secrets
+.env
+
+# Ignore chroma_db
+chroma_langchain_db/
+
