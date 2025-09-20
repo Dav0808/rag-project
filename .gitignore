@@ -7,3 +7,13 @@
 # Ignore chroma_db
 chroma_langchain_db/
 
+# Virtual environments
+venv/
+env/
+rag_app/
+
+# VS Code settings
+.vscode/
+
+
+

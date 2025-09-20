@@ -1,0 +1,19 @@
+# Ignore Jupyter notebooks (not needed in container)
+*.ipynb
+
+# Ignore environment file with secrets (set in Azure instead)
+.env
+
+# Ignore Chroma DB folder (you can rebuild in container)
+chroma_langchain_db/
+
+# Optional: ignore Git repo to reduce build context
+.git
+.gitignore
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+
+# Optional: ignore VS Code settings
+.vscode/
