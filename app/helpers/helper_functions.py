@@ -1,4 +1,4 @@
-from generators.generate import State
+from app.generators.generate import State
 from langchain_core.prompts import PromptTemplate
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv

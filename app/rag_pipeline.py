@@ -1,7 +1,7 @@
 
 from langgraph.graph import START, StateGraph
-from generators.generate import generate, State
-from retrievers.retriever import retrieve
+from app.generators.generate import generate, State
+from app.retrievers.retriever import retrieve
 from stores.vector_store import load_documents
 
 load_documents()

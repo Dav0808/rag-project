@@ -4,16 +4,14 @@ FROM python:3.13-slim
 WORKDIR /code
 
 # Copy the requirements file into the container
-COPY requirements.txt .
+COPY ./requirements.txt /code/requirements.txt
 
 # Install the dependencies
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . .
-
-# Expose the port that the app will run on
-EXPOSE 3100
+COPY ./app /code/app
 
 # Command to run the application using Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--workers", "4"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+
