@@ -50,14 +50,10 @@ def load_documents():
         # Split into chunks
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=100)
         chunks = text_splitter.split_documents(docs)
-        print(f"[DEBUG] Created {len(chunks)} chunks from {filename}")
-        for i, chunk in enumerate(chunks[:3]):  # print first 3 for inspection
-            print(f"[DEBUG] Chunk {i} length: {len(chunk.page_content)}")
-            print(f"[DEBUG] First 200 chars:\n{chunk.page_content[:200]}")
         all_chunks.extend(chunks)
 
     if all_chunks:
-         batch_size = 100  # tune this if needed
+         batch_size = 100
          for i in range(0, len(all_chunks), batch_size):
             batch = all_chunks[i : i + batch_size]
             print(f"[DEBUG] Embedding batch {i//batch_size + 1}, size {len(batch)}")
