@@ -21,17 +21,16 @@ def load_documents():
     """Load new documents into Chroma, skipping already loaded ones."""
     
     # List all PDFs
-    pdf_files = [f for f in os.listdir(DOCUMENTS_DIR) if f.endswith(".pdf")]
-
-    # Get names of already loaded documents
-    existing_docs = {doc.metadata.get("source") for doc in vector_store.similarity_search("")}
-
-    # Filter out already loaded files
-    new_files = [f for f in pdf_files if f not in existing_docs]
-
-    if not new_files:
-        print("All documents already loaded. Skipping embedding.")
+    pdf_files = {f for f in os.listdir(DOCUMENTS_DIR) if f.endswith(".pdf")}
+    print('pdf files:', pdf_files)
+    
+    data = vector_store._collection.get(include=["metadatas"])
+    all_sources = {m.get("source") for m in data["metadatas"]}
+    print("All sources in DB:", all_sources)
+    if pdf_files == all_sources:
         return
+    
+    new_files = list(pdf_files - all_sources)
 
     all_chunks = []
 
@@ -41,14 +40,15 @@ def load_documents():
         docs = loader.load()
 
         # Assign source metadata
-        for doc in docs:
+        for i, doc in enumerate(docs, start=1):
             doc.metadata["source"] = filename
+            doc.metadata["page"] = i
 
         # Skip pages with very little text
-        docs = [doc for doc in docs if len(doc.page_content.strip()) > 50]
+        docs = [doc for doc in docs if len(doc.page_content.strip()) > 800]
 
         # Split into chunks
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=100)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
         chunks = text_splitter.split_documents(docs)
         all_chunks.extend(chunks)
 
@@ -62,3 +62,17 @@ def load_documents():
     # print(f"Loaded and persisted {len(all_chunks)} chunks.")
     else:
         print("No meaningful text found in new PDFs.")
+
+# Check sample documents in your vector store
+def inspect_vector_store():
+    """See what's actually in your vector store"""
+    # Get a larger sample
+    sample_docs = vector_store.similarity_search("", k=10)
+    
+    for i, doc in enumerate(sample_docs):
+        print(f"\n--- Document {i} ---")
+        print(f"Source: {doc.metadata.get('source')}")
+        print(f"Page: {doc.metadata.get('page', 'N/A')}")
+        print(f"Content length: {len(doc.page_content)}")
+        print(f"Content preview: {doc.page_content}...")
+        # print(f"Content end: ...{doc.page_content[-200:]}")
