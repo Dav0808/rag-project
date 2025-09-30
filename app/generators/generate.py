@@ -1,4 +1,4 @@
-from typing import List, TypedDict, Annotated
+from typing import List, TypedDict
 from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
 from langchain_core.language_models.base import BaseLanguageModel
@@ -17,7 +17,8 @@ def generate(state:State) -> dict:
     if not state["context"]:
         docs_content = "No relevant context found."
     else:
-        docs_content = "\n\n".join(doc.page_content for doc in state["context"])
+        docs_content = "\n\n".join(
+        f"[{doc.metadata.get('source', 'unknown')}, page {doc.metadata.get('page', '?')}] {doc.page_content}" for doc in state["context"])
     formatted_prompt = state["prompt"].format(
     question=state["question"],
     context=docs_content
